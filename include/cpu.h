@@ -42,7 +42,7 @@ CPU *Create_CPU(Memory *mem);
 void Destroy_CPU(CPU *cpu);
 
 void Reset_CPU(CPU *cpu);
-void Step_CPU(CPU *cpu);
+uint8_t Step_CPU(CPU *cpu);
 
 
 
@@ -54,6 +54,7 @@ void Execute_CMP_IMM(CPU *cpu);
 void Execute_BEQ(CPU *cpu);
 void Execute_BNE(CPU *cpu);
 void Execute_JMP_ABS(CPU *cpu);
-
+void Execute_CLD(CPU *cpu);
+void Execute_LDX_IMM(CPU *cpu);
 
 #endif

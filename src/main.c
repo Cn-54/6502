@@ -10,6 +10,7 @@ int main(){
 
 
     Reset_CPU(cpu);
+    cpu->PC = 0x0400;
     while (!cpu->halt) {
         Step_CPU(cpu);
     }

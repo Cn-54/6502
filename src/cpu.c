@@ -44,9 +44,6 @@ void Reset_CPU(CPU *cpu){
 }
 
 static uint8_t Fetch(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL){
-        return 0;
-    }
 
     uint8_t opcode = Read_Memory(cpu->mem, cpu->PC);
     cpu->PC++;
@@ -54,30 +51,26 @@ static uint8_t Fetch(CPU *cpu){
     return opcode;
 }
 
-static void execute(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL){
-        return;
-    }
+static uint8_t execute(CPU *cpu){
 
     uint8_t opcode = Fetch(cpu);
 
     if (instructions[opcode].execute == NULL) {
         printf("Unimplemented instruction: %s, Opcode: $%02X\n",instructions[opcode].asm_name,opcode);
         cpu->halt = 1;
-        return;
+        return 0;
     }
 
-    printf("%s\n",instructions[opcode].asm_name);
+    printf("%04X  %02X  %-10s A:%02X X:%02X Y:%02X P:%02X SP:%02X\n",
+            cpu->PC, opcode, instructions[opcode].asm_name,
+            cpu->AC, cpu->XR, cpu->YR, cpu->SR, cpu->SP);
 
     instructions[opcode].execute(cpu);
+    return instructions[opcode].cycles;
 }
 
-void Step_CPU(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL){
-        return;
-    }
-
-    execute(cpu);
+uint8_t Step_CPU(CPU *cpu){
+    return execute(cpu);
 }
 
 static void STACK_PUSH(CPU *cpu, uint8_t byte){
@@ -130,13 +123,42 @@ void Execute_DEY(CPU *cpu){
     if (cpu == NULL || cpu->mem == NULL) {
         return;
     }
-    cpu->YR --;
+    cpu->YR--;
+
+    // zero flag
+    if (cpu->YR == 0){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+
+    // negative flag (if bit 7 is set)
+    if (cpu->YR & FLAG_NEGATIVE){
+        cpu->SR |= FLAG_NEGATIVE;
+    } else{
+        cpu->SR &= ~FLAG_NEGATIVE;
+    }
 }
+
 void Execute_DEX(CPU *cpu){
     if (cpu == NULL || cpu->mem == NULL) {
         return;
     }
-    cpu->YR --;
+    cpu->XR--;
+
+    // zero flag
+    if (cpu->XR == 0){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+
+    // negative flag (if bit 7 is set)
+    if (cpu->XR & FLAG_NEGATIVE){
+        cpu->SR |= FLAG_NEGATIVE;
+    } else{
+        cpu->SR &= ~FLAG_NEGATIVE;
+    }
 }
 
 void Execute_CMP_IMM(CPU *cpu){
@@ -207,4 +229,36 @@ void Execute_JMP_ABS(CPU *cpu){
 
     cpu->PC_L = low;
     cpu->PC_H = high;
+}
+
+void Execute_CLD(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    cpu->SR &= ~(FLAG_DECIMAL);
+}
+
+void Execute_LDX_IMM(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    uint8_t val = Read_Memory(cpu->mem, cpu->PC);
+    cpu->XR = val;
+
+        // zero flag
+    if (val == 0){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+
+    // negative flag (if bit 7 is set)
+    if (val & FLAG_NEGATIVE){
+        cpu->SR |= FLAG_NEGATIVE;
+    } else{
+        cpu->SR &= ~FLAG_NEGATIVE;
+    }
+    cpu->PC++;
 }
