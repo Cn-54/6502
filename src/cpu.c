@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "cpu.h"
 #include "instructions.h"
+#include "memory.h"
 
 CPU *Create_CPU(Memory *mem){
     if (mem == NULL){
@@ -121,4 +122,75 @@ void Execute_PHP(CPU *cpu){ // pushes the status register to the stack with brea
 
     STACK_PUSH(cpu,cpu->SR | FLAG_BREAK | FLAG_UNUSED);
 
+}
+
+void Execute_DEY(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+    cpu->YR --;
+}
+void Execute_DEX(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+    cpu->YR --;
+}
+
+void Execute_CMP_IMM(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    uint8_t value = Read_Memory(cpu->mem, cpu->PC);
+    cpu->PC++;
+
+    uint8_t result = cpu->AC - value;
+
+    // carry flag
+    if (cpu->AC >= value){
+        cpu->SR |= FLAG_CARRY;
+    } else{
+        cpu->SR &= ~FLAG_CARRY;
+    }
+
+    // zero flag
+    if (cpu->AC == value){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+
+    // negative flag (if bit 7 is set)
+    if (result & FLAG_NEGATIVE){
+        cpu->SR |= FLAG_NEGATIVE;
+    } else{
+        cpu->SR &= ~FLAG_NEGATIVE;
+    }
+}
+
+void Execute_BEQ(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->PC);
+    cpu->PC++;
+
+    if (cpu->SR & FLAG_ZERO) {
+        cpu->PC += offset;
+    }
+}
+
+void Execute_BNE(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->PC);
+    cpu->PC++;
+
+    if (!(cpu->SR & FLAG_ZERO)) {
+        cpu->PC += offset;
+    }
 }

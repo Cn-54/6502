@@ -1,6 +1,6 @@
 
 CC      = gcc
-CFLAGS  = -Wall -Wextra -std=c11 -Iinclude
+CFLAGS = -Wall -Wextra -std=c11 -Iinclude -g -O0
 
 SRC_DIR = src
 OBJ_DIR = build

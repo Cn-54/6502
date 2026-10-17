@@ -48,6 +48,11 @@ void Step_CPU(CPU *cpu);
 
 void Execute_BRK(CPU *cpu);
 void Execute_PHP(CPU *cpu);
+void Execute_DEY(CPU *cpu);
+void Execute_DEX(CPU *cpu);
+void Execute_CMP_IMM(CPU *cpu);
+void Execute_BEQ(CPU *cpu);
+void Execute_BNE(CPU *cpu);
 
 
 #endif

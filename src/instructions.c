@@ -157,7 +157,7 @@ const struct cpu_ins instructions[256] = {
     {"STA zp",       2, NULL}, // 85
     {"STX zp",       2, NULL}, // 86
     {"Undefined",    0, NULL}, // 87
-    {"DEY impl",     1, NULL}, // 88
+    {"DEY impl",     1, Execute_DEY}, // 88
     {"Undefined",    0, NULL}, // 89
     {"TXA impl",     1, NULL}, // 8A
     {"Undefined",    0, NULL}, // 8B
@@ -230,8 +230,8 @@ const struct cpu_ins instructions[256] = {
     {"DEC zp",       2, NULL}, // C6
     {"Undefined",    0, NULL}, // C7
     {"INY impl",     1, NULL}, // C8
-    {"CMP #",        2, NULL}, // C9
-    {"DEX impl",     1, NULL}, // CA
+    {"CMP #",        2, Execute_CMP_IMM}, // C9
+    {"DEX impl",     1, Execute_DEX}, // CA
     {"Undefined",    0, NULL}, // CB
     {"CPY abs",      3, NULL}, // CC
     {"CMP abs",      3, NULL}, // CD
@@ -239,7 +239,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined",    0, NULL}, // CF
 
     /* 0xD0 - 0xDF */
-    {"BNE rel",      2, NULL}, // D0
+    {"BNE rel",      2, Execute_BNE}, // D0
     {"CMP ind, Y",   2, NULL}, // D1
     {"Undefined",    0, NULL}, // D2
     {"Undefined",    0, NULL}, // D3
@@ -275,7 +275,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined",    0, NULL}, // EF
 
     /* 0xF0 - 0xFF */
-    {"BEQ rel",      2, NULL}, // F0
+    {"BEQ rel",      2, Execute_BEQ}, // F0
     {"SBC ind, Y",   2, NULL}, // F1
     {"Undefined",    0, NULL}, // F2
     {"Undefined",    0, NULL}, // F3

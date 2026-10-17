@@ -8,6 +8,8 @@ int main(){
 
     Load_Memory(mem, "roms//6502_functional_test.bin", 0x0000);
 
+
+    Reset_CPU(cpu);
     while (!cpu->halt) {
         Step_CPU(cpu);
     }
