@@ -67,6 +67,8 @@ static void execute(CPU *cpu){
         return;
     }
 
+    printf("%s\n",instructions[opcode].asm_name);
+
     instructions[opcode].execute(cpu);
 }
 
@@ -193,4 +195,16 @@ void Execute_BNE(CPU *cpu){
     if (!(cpu->SR & FLAG_ZERO)) {
         cpu->PC += offset;
     }
+}
+
+void Execute_JMP_ABS(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    uint8_t low = Read_Memory(cpu->mem, cpu->PC); // use variables to stop them overwriting pc before its complete
+    uint8_t high = Read_Memory(cpu->mem, cpu->PC + 1);
+
+    cpu->PC_L = low;
+    cpu->PC_H = high;
 }

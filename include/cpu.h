@@ -53,6 +53,7 @@ void Execute_DEX(CPU *cpu);
 void Execute_CMP_IMM(CPU *cpu);
 void Execute_BEQ(CPU *cpu);
 void Execute_BNE(CPU *cpu);
+void Execute_JMP_ABS(CPU *cpu);
 
 
 #endif

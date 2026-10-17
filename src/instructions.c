@@ -89,7 +89,7 @@ const struct cpu_ins instructions[256] = {
     {"EOR #",        2, NULL}, // 49
     {"LSR A",        1, NULL}, // 4A
     {"Undefined",    0, NULL}, // 4B
-    {"JMP abs",      3, NULL}, // 4C
+    {"JMP abs",      3, Execute_JMP_ABS}, // 4C
     {"EOR abs",      3, NULL}, // 4D
     {"LSR abs",      3, NULL}, // 4E
     {"Undefined",    0, NULL}, // 4F
