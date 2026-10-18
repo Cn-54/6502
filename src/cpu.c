@@ -82,6 +82,17 @@ static uint8_t STACK_POP(CPU *cpu){
     return byte;
 }
 
+static uint16_t Read_Word(CPU *cpu, uint16_t addr){
+    uint8_t low  = Read_Memory(cpu->mem, addr);
+    uint8_t high = Read_Memory(cpu->mem, addr + 1);
+    return ((uint16_t)high << 8) | low;
+}
+
+static void Write_Word(CPU *cpu, uint16_t addr, uint16_t value){
+    Write_Memory(cpu->mem, addr, (uint8_t)(value & 0xFF));   // low byte first
+    Write_Memory(cpu->mem, addr + 1, (uint8_t)(value >> 8)); // then high byte
+}
+
 static void SET_ZERO(CPU *cpu,uint8_t val){
             // zero flag
     if (val == 0){
@@ -162,8 +173,6 @@ void Execute_CMP_IMM(CPU *cpu){
     }
 
     uint8_t value = Read_Memory(cpu->mem, cpu->op_addr);
-    cpu->PC++;
-
     uint8_t result = cpu->AC - value;
 
     // carry flag
@@ -213,11 +222,8 @@ void Execute_JMP_ABS(CPU *cpu){
         return;
     }
 
-    uint8_t low = Read_Memory(cpu->mem, cpu->op_addr); // use variables to stop them overwriting pc before its complete
-    uint8_t high = Read_Memory(cpu->mem, cpu->op_addr + 1);
+    cpu->PC = Read_Word(cpu, cpu->op_addr);
 
-    cpu->PC_L = low;
-    cpu->PC_H = high;
 }
 
 void Execute_CLD(CPU *cpu){
@@ -270,10 +276,7 @@ void Execute_STA_ABS(CPU *cpu){
         return;
     }
 
-    uint8_t H = Read_Memory(cpu->mem, cpu->op_addr);
-    uint8_t L = Read_Memory(cpu->mem, cpu->op_addr+1);
-
-    uint16_t addr = (L << 4) & L;
+    uint16_t addr = Read_Word(cpu, cpu->op_addr);
 
     Write_Memory(cpu->mem, addr, cpu->AC);
 }
