@@ -160,7 +160,7 @@ const struct cpu_ins instructions[256] = {
     {"TXA impl", 1, NULL, 2}, // 8A
     {"Undefined", 0, NULL, 0}, // 8B
     {"STY abs", 3, NULL, 4}, // 8C
-    {"STA abs", 3, NULL, 4}, // 8D
+    {"STA abs", 3, Execute_STA_ABS, 4}, // 8D
     {"STX abs", 3, NULL, 4}, // 8E
     {"Undefined", 0, NULL, 0}, // 8F
 
@@ -183,7 +183,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // 9F
 
     /* 0xA0 - 0xAF */
-    {"LDY #", 2, NULL, 2}, // A0
+    {"LDY #", 2, Execute_LDY_IMM, 2}, // A0
     {"LDA X, ind", 2, NULL, 6}, // A1
     {"LDX #", 2, Execute_LDX_IMM, 2}, // A2
     {"Undefined", 0, NULL, 0}, // A3

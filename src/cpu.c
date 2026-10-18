@@ -43,17 +43,11 @@ void Reset_CPU(CPU *cpu){
     cpu->PC = ((uint16_t)high << 8) | low;
 }
 
-static uint8_t Fetch(CPU *cpu){
-
-    uint8_t opcode = Read_Memory(cpu->mem, cpu->PC);
-    cpu->PC++;
-
-    return opcode;
-}
-
 static uint8_t execute(CPU *cpu){
 
-    uint8_t opcode = Fetch(cpu);
+    uint16_t pc = cpu->PC;
+    uint8_t opcode = Read_Memory(cpu->mem, pc);
+    const struct cpu_ins *ins = &instructions[opcode];
 
     if (instructions[opcode].execute == NULL) {
         printf("Unimplemented instruction: %s, Opcode: $%02X\n",instructions[opcode].asm_name,opcode);
@@ -62,11 +56,14 @@ static uint8_t execute(CPU *cpu){
     }
 
     printf("%04X  %02X  %-10s A:%02X X:%02X Y:%02X P:%02X SP:%02X\n",
-            cpu->PC-1, opcode, instructions[opcode].asm_name,
+            pc, opcode, instructions[opcode].asm_name,
             cpu->AC, cpu->XR, cpu->YR, cpu->SR, cpu->SP);
 
-    instructions[opcode].execute(cpu);
-    return instructions[opcode].cycles;
+    cpu->op_addr = pc + 1;
+    cpu->PC = pc + ins->size;
+
+    ins->execute(cpu);
+    return ins->cycles;
 }
 
 uint8_t Step_CPU(CPU *cpu){
@@ -101,7 +98,6 @@ static void SET_NEGATIVE(CPU *cpu, uint8_t val){
     } else{
         cpu->SR &= ~FLAG_NEGATIVE;
     }
-    cpu->PC++;
 }
 
 void Execute_BRK(CPU *cpu){
@@ -165,7 +161,7 @@ void Execute_CMP_IMM(CPU *cpu){
         return;
     }
 
-    uint8_t value = Read_Memory(cpu->mem, cpu->PC);
+    uint8_t value = Read_Memory(cpu->mem, cpu->op_addr);
     cpu->PC++;
 
     uint8_t result = cpu->AC - value;
@@ -193,8 +189,7 @@ void Execute_BEQ(CPU *cpu){
         return;
     }
 
-    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->PC);
-    cpu->PC++;
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
 
     if (cpu->SR & FLAG_ZERO) {
         cpu->PC += offset;
@@ -206,8 +201,7 @@ void Execute_BNE(CPU *cpu){
         return;
     }
 
-    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->PC);
-    cpu->PC++;
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
 
     if (!(cpu->SR & FLAG_ZERO)) {
         cpu->PC += offset;
@@ -219,8 +213,8 @@ void Execute_JMP_ABS(CPU *cpu){
         return;
     }
 
-    uint8_t low = Read_Memory(cpu->mem, cpu->PC); // use variables to stop them overwriting pc before its complete
-    uint8_t high = Read_Memory(cpu->mem, cpu->PC + 1);
+    uint8_t low = Read_Memory(cpu->mem, cpu->op_addr); // use variables to stop them overwriting pc before its complete
+    uint8_t high = Read_Memory(cpu->mem, cpu->op_addr + 1);
 
     cpu->PC_L = low;
     cpu->PC_H = high;
@@ -239,14 +233,13 @@ void Execute_LDX_IMM(CPU *cpu){
         return;
     }
 
-    uint8_t val = Read_Memory(cpu->mem, cpu->PC);
+    uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
     cpu->XR = val;
 
         // zero flag
     SET_ZERO(cpu, val);
 
     SET_NEGATIVE(cpu, val);
-    cpu->PC++;
 }
 
 void Execute_TXS(CPU *cpu){
@@ -262,12 +255,37 @@ void Execute_LDA_IMM(CPU *cpu){
         return;
     }
 
-    uint8_t val = Read_Memory(cpu->mem, cpu->PC);
+    uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
     cpu->AC = val;
 
             // zero flag
     SET_ZERO(cpu, val);
 
     SET_NEGATIVE(cpu, val);
-    cpu->PC++;
+}
+
+
+void Execute_STA_ABS(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    uint8_t H = Read_Memory(cpu->mem, cpu->op_addr);
+    uint8_t L = Read_Memory(cpu->mem, cpu->op_addr+1);
+
+    uint16_t addr = (L << 4) & L;
+
+    Write_Memory(cpu->mem, addr, cpu->AC);
+}
+
+void Execute_LDY_IMM(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
+    cpu->YR = val;
+
+    SET_ZERO(cpu, val);
+    SET_NEGATIVE(cpu, val);
 }

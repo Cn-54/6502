@@ -32,6 +32,8 @@ typedef struct {
     uint8_t SR;  // Status register
     uint8_t SP;  // Stack pointer
 
+    uint16_t op_addr;
+
     Memory *mem; // connected memory
 
     unsigned int halt : 1;
@@ -58,5 +60,7 @@ void Execute_CLD(CPU *cpu);
 void Execute_LDX_IMM(CPU *cpu);
 void Execute_TXS(CPU *cpu);
 void Execute_LDA_IMM(CPU *cpu);
+void Execute_STA_ABS(CPU *cpu);
+void Execute_LDY_IMM(CPU *cpu);
 
 #endif
