@@ -11,7 +11,7 @@ CPU *Create_CPU(Memory *mem){
         return NULL;
     }
 
-    CPU *cpu = malloc(sizeof *cpu);
+    CPU *cpu = calloc(1, sizeof *cpu);
 
     if (cpu == NULL){
         return NULL;
