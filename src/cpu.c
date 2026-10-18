@@ -92,10 +92,6 @@ static uint16_t Read_Word(CPU *cpu, uint16_t addr){
     return ((uint16_t)high << 8) | low;
 }
 
-static void Write_Word(CPU *cpu, uint16_t addr, uint16_t value){
-    Write_Memory(cpu->mem, addr, (uint8_t)(value & 0xFF));   // low byte first
-    Write_Memory(cpu->mem, addr + 1, (uint8_t)(value >> 8)); // then high byte
-}
 
 static void SET_ZERO(CPU *cpu,uint8_t val){
             // zero flag
@@ -295,4 +291,93 @@ void Execute_LDY_IMM(CPU *cpu){
 
     SET_ZERO(cpu, val);
     SET_NEGATIVE(cpu, val);
+}
+
+void Execute_LDA_ABS(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    uint16_t addr = Read_Word(cpu, cpu->op_addr);
+    uint8_t val = Read_Memory(cpu->mem,addr);
+    cpu->AC = val;
+
+    SET_ZERO(cpu, val);
+    SET_NEGATIVE(cpu, val);
+}
+
+void Execute_TYA(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    cpu->AC = cpu->YR;
+
+    SET_ZERO(cpu, cpu->AC);
+    SET_NEGATIVE(cpu, cpu->AC);
+}
+
+void Execute_TAX(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    cpu->XR = cpu->AC;
+
+    SET_ZERO(cpu, cpu->XR);
+    SET_NEGATIVE(cpu, cpu->XR);
+}
+
+void Execute_BPL(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
+
+    if (!(cpu->SR & FLAG_NEGATIVE)) {
+        cpu->PC += offset;
+    }
+}
+
+void Execute_CLC(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    cpu->SR = cpu->SR & ~FLAG_CARRY;
+}
+
+void Execute_ADC_IMM(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
+
+    uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
+
+    uint16_t sum = (uint16_t)cpu->AC + val + (cpu->SR & FLAG_CARRY);
+
+    if (sum > 0xFF){
+        cpu->SR |= FLAG_CARRY;
+    } else{
+        cpu->SR &= ~FLAG_CARRY;
+    }
+
+
+    if ((~(cpu->AC ^ val) & (cpu->AC ^ sum)) & FLAG_NEGATIVE){
+        cpu->SR |= FLAG_OVERFLOW;
+    } else{
+        cpu->SR &= ~FLAG_OVERFLOW;
+    }
+
+    cpu->AC = (uint8_t)sum;
+
+    SET_ZERO(cpu, cpu->AC);
+    SET_NEGATIVE(cpu, cpu->AC);
+}
+
+void Execute_NOP(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
+    }
 }

@@ -17,10 +17,10 @@
 
 // CPU state
 typedef struct {
-    union {
+    union {  // allows PC to read too and written too as the full 16 bit val or from the low 8 or the high 8 (not needed but helps slightly)
         uint16_t PC;
 
-        struct {
+        struct {  
             uint8_t PC_L;
             uint8_t PC_H;
         };
@@ -62,5 +62,12 @@ void Execute_TXS(CPU *cpu);
 void Execute_LDA_IMM(CPU *cpu);
 void Execute_STA_ABS(CPU *cpu);
 void Execute_LDY_IMM(CPU *cpu);
+void Execute_LDA_ABS(CPU *cpu);
+void Execute_TYA(CPU *cpu);
+void Execute_TAX(CPU *cpu);
+void Execute_BPL(CPU *cpu);
+void Execute_CLC(CPU *cpu);
+void Execute_ADC_IMM(CPU *cpu);
+void Execute_NOP(CPU *cpu);
 
 #endif

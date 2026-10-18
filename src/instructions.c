@@ -21,7 +21,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // 0F
 
     /* 0x10 - 0x1F */
-    {"BPL rel", 2, NULL, 2}, // 10
+    {"BPL rel", 2, Execute_BPL, 2}, // 10
     {"ORA ind, Y", 2, NULL, 5}, // 11
     {"Undefined", 0, NULL, 0}, // 12
     {"Undefined", 0, NULL, 0}, // 13
@@ -29,7 +29,7 @@ const struct cpu_ins instructions[256] = {
     {"ORA zp, X", 2, NULL, 4}, // 15
     {"ASL zp, X", 2, NULL, 6}, // 16
     {"Undefined", 0, NULL, 0}, // 17
-    {"CLC impl", 1, NULL, 2}, // 18
+    {"CLC impl", 1, Execute_CLC, 2}, // 18
     {"ORA abs, Y", 3, NULL, 4}, // 19
     {"Undefined", 0, NULL, 0}, // 1A
     {"Undefined", 0, NULL, 0}, // 1B
@@ -120,7 +120,7 @@ const struct cpu_ins instructions[256] = {
     {"ROR zp", 2, NULL, 5}, // 66
     {"Undefined", 0, NULL, 0}, // 67
     {"PLA impl", 1, NULL, 4}, // 68
-    {"ADC #", 2, NULL, 2}, // 69
+    {"ADC #", 2, Execute_ADC_IMM, 2}, // 69
     {"ROR A", 1, NULL, 2}, // 6A
     {"Undefined", 0, NULL, 0}, // 6B
     {"JMP ind", 3, NULL, 5}, // 6C
@@ -173,7 +173,7 @@ const struct cpu_ins instructions[256] = {
     {"STA zp, X", 2, NULL, 4}, // 95
     {"STX zp, Y", 2, NULL, 4}, // 96
     {"Undefined", 0, NULL, 0}, // 97
-    {"TYA impl", 1, NULL, 2}, // 98
+    {"TYA impl", 1, Execute_TYA, 2}, // 98
     {"STA abs, Y", 3, NULL, 5}, // 99
     {"TXS impl", 1, Execute_TXS, 2}, // 9A
     {"Undefined", 0, NULL, 0}, // 9B
@@ -193,10 +193,10 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // A7
     {"TAY impl", 1, NULL, 2}, // A8
     {"LDA #", 2, Execute_LDA_IMM, 2}, // A9
-    {"TAX impl", 1, NULL, 2}, // AA
+    {"TAX impl", 1, Execute_TAX, 2}, // AA
     {"Undefined", 0, NULL, 0}, // AB
     {"LDY abs", 3, NULL, 4}, // AC
-    {"LDA abs", 3, NULL, 4}, // AD
+    {"LDA abs", 3, Execute_LDA_ABS, 4}, // AD
     {"LDX abs", 3, NULL, 4}, // AE
     {"Undefined", 0, NULL, 0}, // AF
 
@@ -265,7 +265,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // E7
     {"INX impl", 1, NULL, 2}, // E8
     {"SBC #", 2, NULL, 2}, // E9
-    {"NOP impl", 1, NULL, 2}, // EA
+    {"NOP impl", 1, Execute_NOP, 2}, // EA
     {"Undefined", 0, NULL, 0}, // EB
     {"CPX abs", 3, NULL, 4}, // EC
     {"SBC abs", 3, NULL, 4}, // ED
