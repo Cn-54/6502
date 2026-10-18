@@ -4,7 +4,8 @@ A work-in-progress MOS 6502 CPU emulator written in C.
 
 ## Status
 
-14 of the 151 official opcodes are implemented. The CPU is built instruction by instruction by running Klaus Dormann's 6502 functional test and implementing each opcode it halts on.
+14 of the 151 official opcodes are implemented. The CPU is built instruction by instruction by running [Klaus Dormann's 6502 functional test](github.com/Klaus2m5/6502_65C02_functional_tests) and implementing each opcode it halts on.
+
 
 ## What is implemented
 
@@ -27,7 +28,7 @@ execution starts at `$0400`. The CPU halts and prints the opcode when it reaches
 instruction that isn't implemented yet.
 
 ## What I learnt
-Moving to a 6502 from a CHIP-8 emulator and my own simple 16-bit CPU taught me more about how real hardware behaves
+Moving to a 6502 from a CHIP-8 emulator and my own simple 16-bit CPU taught me more about how real hardware behaves:
 - **Real instruction sets are full of quirks.** Flag behaviour (what sets N, Z and C,
   and what doesn't, like `TXS`), little-endian operand order, and how the stack
   and branch offsets work all had to match the hardware exactly.
