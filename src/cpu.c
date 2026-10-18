@@ -112,9 +112,7 @@ static void SET_NEGATIVE(CPU *cpu, uint8_t val){
 }
 
 void Execute_BRK(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     cpu->PC++;  // Skip the padding byte after BRK
 
@@ -137,18 +135,14 @@ void Execute_BRK(CPU *cpu){
 }
 
 void Execute_PHP(CPU *cpu){ // pushes the status register to the stack with break and flag 5 set
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     STACK_PUSH(cpu,cpu->SR | FLAG_BREAK | FLAG_UNUSED);
 
 }
 
 void Execute_DEY(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
     cpu->YR--;
 
     SET_ZERO(cpu, cpu->YR);
@@ -157,9 +151,7 @@ void Execute_DEY(CPU *cpu){
 }
 
 void Execute_DEX(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
     cpu->XR--;
 
     SET_ZERO(cpu, cpu->XR);
@@ -168,9 +160,7 @@ void Execute_DEX(CPU *cpu){
 }
 
 void Execute_CMP_IMM(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     uint8_t value = Read_Memory(cpu->mem, cpu->op_addr);
     uint8_t result = cpu->AC - value;
@@ -194,9 +184,7 @@ void Execute_CMP_IMM(CPU *cpu){
 }
 
 void Execute_BEQ(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
 
@@ -206,9 +194,7 @@ void Execute_BEQ(CPU *cpu){
 }
 
 void Execute_BNE(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
 
@@ -218,26 +204,20 @@ void Execute_BNE(CPU *cpu){
 }
 
 void Execute_JMP_ABS(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     cpu->PC = Read_Word(cpu, cpu->op_addr);
 
 }
 
 void Execute_CLD(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     cpu->SR &= ~(FLAG_DECIMAL);
 }
 
 void Execute_LDX_IMM(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
     cpu->XR = val;
@@ -249,17 +229,13 @@ void Execute_LDX_IMM(CPU *cpu){
 }
 
 void Execute_TXS(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     cpu->SP = cpu->XR;
 }
 
 void Execute_LDA_IMM(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
     cpu->AC = val;
@@ -272,9 +248,7 @@ void Execute_LDA_IMM(CPU *cpu){
 
 
 void Execute_STA_ABS(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     uint16_t addr = Read_Word(cpu, cpu->op_addr);
 
@@ -282,9 +256,7 @@ void Execute_STA_ABS(CPU *cpu){
 }
 
 void Execute_LDY_IMM(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
     cpu->YR = val;
@@ -294,9 +266,7 @@ void Execute_LDY_IMM(CPU *cpu){
 }
 
 void Execute_LDA_ABS(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     uint16_t addr = Read_Word(cpu, cpu->op_addr);
     uint8_t val = Read_Memory(cpu->mem,addr);
@@ -307,9 +277,7 @@ void Execute_LDA_ABS(CPU *cpu){
 }
 
 void Execute_TYA(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     cpu->AC = cpu->YR;
 
@@ -318,9 +286,7 @@ void Execute_TYA(CPU *cpu){
 }
 
 void Execute_TAX(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     cpu->XR = cpu->AC;
 
@@ -329,9 +295,7 @@ void Execute_TAX(CPU *cpu){
 }
 
 void Execute_BPL(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
 
@@ -341,17 +305,13 @@ void Execute_BPL(CPU *cpu){
 }
 
 void Execute_CLC(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     cpu->SR = cpu->SR & ~FLAG_CARRY;
 }
 
 void Execute_ADC_IMM(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 
     uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
 
@@ -377,7 +337,5 @@ void Execute_ADC_IMM(CPU *cpu){
 }
 
 void Execute_NOP(CPU *cpu){
-    if (cpu == NULL || cpu->mem == NULL) {
-        return;
-    }
+
 }
