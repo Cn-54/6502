@@ -40,7 +40,11 @@ void Reset_CPU(CPU *cpu){
     uint8_t low  = Read_Memory(cpu->mem, 0xFFFC);
     uint8_t high = Read_Memory(cpu->mem, 0xFFFD);
 
-    cpu->PC = ((uint16_t)high << 8) | low;
+    cpu->PC_L = low;
+    cpu->PC_H = high;
+
+    cpu->halt = 0;
+    cpu->op_addr = 0;
 }
 
 static uint8_t execute(CPU *cpu){
