@@ -56,5 +56,7 @@ void Execute_BNE(CPU *cpu);
 void Execute_JMP_ABS(CPU *cpu);
 void Execute_CLD(CPU *cpu);
 void Execute_LDX_IMM(CPU *cpu);
+void Execute_TXS(CPU *cpu);
+void Execute_LDA_IMM(CPU *cpu);
 
 #endif

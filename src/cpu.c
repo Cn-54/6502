@@ -62,7 +62,7 @@ static uint8_t execute(CPU *cpu){
     }
 
     printf("%04X  %02X  %-10s A:%02X X:%02X Y:%02X P:%02X SP:%02X\n",
-            cpu->PC, opcode, instructions[opcode].asm_name,
+            cpu->PC-1, opcode, instructions[opcode].asm_name,
             cpu->AC, cpu->XR, cpu->YR, cpu->SR, cpu->SP);
 
     instructions[opcode].execute(cpu);
@@ -83,6 +83,25 @@ static uint8_t STACK_POP(CPU *cpu){
     cpu->SP++;
 
     return byte;
+}
+
+static void SET_ZERO(CPU *cpu,uint8_t val){
+            // zero flag
+    if (val == 0){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+}
+
+static void SET_NEGATIVE(CPU *cpu, uint8_t val){
+    // negative flag (if bit 7 is set)
+    if (val & FLAG_NEGATIVE){
+        cpu->SR |= FLAG_NEGATIVE;
+    } else{
+        cpu->SR &= ~FLAG_NEGATIVE;
+    }
+    cpu->PC++;
 }
 
 void Execute_BRK(CPU *cpu){
@@ -125,19 +144,9 @@ void Execute_DEY(CPU *cpu){
     }
     cpu->YR--;
 
-    // zero flag
-    if (cpu->YR == 0){
-        cpu->SR |= FLAG_ZERO;
-    } else{
-        cpu->SR &= ~FLAG_ZERO;
-    }
+    SET_ZERO(cpu, cpu->YR);
 
-    // negative flag (if bit 7 is set)
-    if (cpu->YR & FLAG_NEGATIVE){
-        cpu->SR |= FLAG_NEGATIVE;
-    } else{
-        cpu->SR &= ~FLAG_NEGATIVE;
-    }
+    SET_NEGATIVE(cpu, cpu->YR);
 }
 
 void Execute_DEX(CPU *cpu){
@@ -146,19 +155,9 @@ void Execute_DEX(CPU *cpu){
     }
     cpu->XR--;
 
-    // zero flag
-    if (cpu->XR == 0){
-        cpu->SR |= FLAG_ZERO;
-    } else{
-        cpu->SR &= ~FLAG_ZERO;
-    }
+    SET_ZERO(cpu, cpu->XR);
 
-    // negative flag (if bit 7 is set)
-    if (cpu->XR & FLAG_NEGATIVE){
-        cpu->SR |= FLAG_NEGATIVE;
-    } else{
-        cpu->SR &= ~FLAG_NEGATIVE;
-    }
+    SET_NEGATIVE(cpu, cpu->XR);
 }
 
 void Execute_CMP_IMM(CPU *cpu){
@@ -185,12 +184,8 @@ void Execute_CMP_IMM(CPU *cpu){
         cpu->SR &= ~FLAG_ZERO;
     }
 
-    // negative flag (if bit 7 is set)
-    if (result & FLAG_NEGATIVE){
-        cpu->SR |= FLAG_NEGATIVE;
-    } else{
-        cpu->SR &= ~FLAG_NEGATIVE;
-    }
+
+    SET_NEGATIVE(cpu, result);
 }
 
 void Execute_BEQ(CPU *cpu){
@@ -248,17 +243,31 @@ void Execute_LDX_IMM(CPU *cpu){
     cpu->XR = val;
 
         // zero flag
-    if (val == 0){
-        cpu->SR |= FLAG_ZERO;
-    } else{
-        cpu->SR &= ~FLAG_ZERO;
+    SET_ZERO(cpu, val);
+
+    SET_NEGATIVE(cpu, val);
+    cpu->PC++;
+}
+
+void Execute_TXS(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
     }
 
-    // negative flag (if bit 7 is set)
-    if (val & FLAG_NEGATIVE){
-        cpu->SR |= FLAG_NEGATIVE;
-    } else{
-        cpu->SR &= ~FLAG_NEGATIVE;
+    cpu->SP = cpu->XR;
+}
+
+void Execute_LDA_IMM(CPU *cpu){
+    if (cpu == NULL || cpu->mem == NULL) {
+        return;
     }
+
+    uint8_t val = Read_Memory(cpu->mem, cpu->PC);
+    cpu->AC = val;
+
+            // zero flag
+    SET_ZERO(cpu, val);
+
+    SET_NEGATIVE(cpu, val);
     cpu->PC++;
 }

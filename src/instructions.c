@@ -175,7 +175,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // 97
     {"TYA impl", 1, NULL, 2}, // 98
     {"STA abs, Y", 3, NULL, 5}, // 99
-    {"TXS impl", 1, NULL, 2}, // 9A
+    {"TXS impl", 1, Execute_TXS, 2}, // 9A
     {"Undefined", 0, NULL, 0}, // 9B
     {"Undefined", 0, NULL, 0}, // 9C
     {"STA abs, X", 3, NULL, 5}, // 9D
@@ -192,7 +192,7 @@ const struct cpu_ins instructions[256] = {
     {"LDX zp", 2, NULL, 3}, // A6
     {"Undefined", 0, NULL, 0}, // A7
     {"TAY impl", 1, NULL, 2}, // A8
-    {"LDA #", 2, NULL, 2}, // A9
+    {"LDA #", 2, Execute_LDA_IMM, 2}, // A9
     {"TAX impl", 1, NULL, 2}, // AA
     {"Undefined", 0, NULL, 0}, // AB
     {"LDY abs", 3, NULL, 4}, // AC
