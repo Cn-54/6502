@@ -4,7 +4,7 @@ A work-in-progress MOS 6502 CPU emulator written in C.
 
 ## Status
 
-14 of the 151 official opcodes are implemented. The CPU is built instruction by instruction by running [Klaus Dormann's 6502 functional test](github.com/Klaus2m5/6502_65C02_functional_tests) and implementing each opcode it halts on.
+21 of the 151 official opcodes are implemented. The CPU is built instruction by instruction by running [Klaus Dormann's 6502 functional test](github.com/Klaus2m5/6502_65C02_functional_tests) and implementing each opcode it halts on.
 
 
 ## What is implemented
