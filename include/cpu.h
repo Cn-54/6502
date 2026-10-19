@@ -71,5 +71,7 @@ void Execute_ADC_IMM(CPU *cpu);
 void Execute_NOP(CPU *cpu);
 void Execute_EOR_IMM(CPU *cpu);
 void Execute_CPY_IMM(CPU *cpu);
+void Execute_BCC(CPU *cpu);
+void Execute_BMI(CPU *cpu);
 
 #endif

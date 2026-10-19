@@ -57,7 +57,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // 2F
 
     /* 0x30 - 0x3F */
-    {"BMI rel", 2, NULL, 2}, // 30
+    {"BMI rel", 2, Execute_BMI, 2}, // 30
     {"AND ind, Y", 2, NULL, 5}, // 31
     {"Undefined", 0, NULL, 0}, // 32
     {"Undefined", 0, NULL, 0}, // 33
@@ -165,7 +165,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // 8F
 
     /* 0x90 - 0x9F */
-    {"BCC rel", 2, NULL, 2}, // 90
+    {"BCC rel", 2, Execute_BCC, 2}, // 90
     {"STA ind, Y", 2, NULL, 6}, // 91
     {"Undefined", 0, NULL, 0}, // 92
     {"Undefined", 0, NULL, 0}, // 93

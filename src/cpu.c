@@ -368,3 +368,19 @@ void Execute_CPY_IMM(CPU *cpu){
 
     SET_NEGATIVE(cpu, result);
 }
+
+void Execute_BCC(CPU *cpu){
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
+
+    if (!(cpu->SR & FLAG_CARRY)) {
+        cpu->PC += offset;
+    }
+}
+
+void Execute_BMI(CPU *cpu){
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
+
+    if ((cpu->SR & FLAG_NEGATIVE)) {
+        cpu->PC += offset;
+    }
+}
