@@ -339,3 +339,32 @@ void Execute_ADC_IMM(CPU *cpu){
 void Execute_NOP(CPU *cpu){
 
 }
+
+
+void Execute_EOR_IMM(CPU *cpu){
+    uint8_t val = Read_Memory(cpu->mem, cpu->op_addr);
+    cpu->AC =  cpu->AC ^ val;
+}
+
+
+void Execute_CPY_IMM(CPU *cpu){
+    uint8_t value = Read_Memory(cpu->mem, cpu->op_addr);
+    uint8_t result = cpu->XR - value;
+
+    // carry flag
+    if (cpu->XR >= value){
+        cpu->SR |= FLAG_CARRY;
+    } else{
+        cpu->SR &= ~FLAG_CARRY;
+    }
+
+    // zero flag
+    if (cpu->XR == value){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+
+
+    SET_NEGATIVE(cpu, result);
+}

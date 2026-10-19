@@ -84,7 +84,7 @@ const struct cpu_ins instructions[256] = {
     {"LSR zp", 2, NULL, 5}, // 46
     {"Undefined", 0, NULL, 0}, // 47
     {"PHA impl", 1, NULL, 3}, // 48
-    {"EOR #", 2, NULL, 2}, // 49
+    {"EOR #", 2, Execute_EOR_IMM, 2}, // 49
     {"LSR A", 1, NULL, 2}, // 4A
     {"Undefined", 0, NULL, 0}, // 4B
     {"JMP abs", 3, Execute_JMP_ABS, 3}, // 4C
@@ -219,7 +219,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // BF
 
     /* 0xC0 - 0xCF */
-    {"CPY #", 2, NULL, 2}, // C0
+    {"CPY #", 2, Execute_CPY_IMM, 2}, // C0
     {"CMP X, ind", 2, NULL, 6}, // C1
     {"Undefined", 0, NULL, 0}, // C2
     {"Undefined", 0, NULL, 0}, // C3
