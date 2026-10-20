@@ -160,8 +160,6 @@ void Execute_DEX(CPU *cpu){
 }
 
 void Execute_CMP_IMM(CPU *cpu){
-
-
     uint8_t value = Read_Memory(cpu->mem, cpu->op_addr);
     uint8_t result = cpu->AC - value;
 
@@ -248,8 +246,6 @@ void Execute_LDA_IMM(CPU *cpu){
 
 
 void Execute_STA_ABS(CPU *cpu){
-
-
     uint16_t addr = Read_Word(cpu, cpu->op_addr);
 
     Write_Memory(cpu->mem, addr, cpu->AC);
@@ -349,17 +345,17 @@ void Execute_EOR_IMM(CPU *cpu){
 
 void Execute_CPY_IMM(CPU *cpu){
     uint8_t value = Read_Memory(cpu->mem, cpu->op_addr);
-    uint8_t result = cpu->XR - value;
+    uint8_t result = cpu->YR - value;
 
     // carry flag
-    if (cpu->XR >= value){
+    if (cpu->YR >= value){
         cpu->SR |= FLAG_CARRY;
     } else{
         cpu->SR &= ~FLAG_CARRY;
     }
 
     // zero flag
-    if (cpu->XR == value){
+    if (cpu->YR == value){
         cpu->SR |= FLAG_ZERO;
     } else{
         cpu->SR &= ~FLAG_ZERO;
@@ -383,4 +379,70 @@ void Execute_BMI(CPU *cpu){
     if ((cpu->SR & FLAG_NEGATIVE)) {
         cpu->PC += offset;
     }
+}
+
+void Execute_BCS(CPU *cpu){
+    int8_t offset = (int8_t)Read_Memory(cpu->mem, cpu->op_addr);
+
+    if ((cpu->SR & FLAG_CARRY)) {
+        cpu->PC += offset;
+    }
+}
+
+void Execute_CPX_IMM(CPU *cpu){
+    uint8_t value = Read_Memory(cpu->mem, cpu->op_addr);
+    uint8_t result = cpu->XR - value;
+
+    // carry flag
+    if (cpu->XR >= value){
+        cpu->SR |= FLAG_CARRY;
+    } else{
+        cpu->SR &= ~FLAG_CARRY;
+    }
+
+    // zero flag
+    if (cpu->XR == value){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+
+
+    SET_NEGATIVE(cpu, result);
+}
+
+
+void Execute_TAY(CPU *cpu){
+    cpu->YR = cpu->AC;
+
+    SET_ZERO(cpu, cpu->YR);
+    SET_NEGATIVE(cpu, cpu->YR);
+}
+
+void Execute_PHA(CPU *cpu){
+    STACK_PUSH(cpu, cpu->AC);
+}
+
+
+void Execute_CMP_ABS(CPU *cpu){
+    uint16_t addr = Read_Word(cpu, cpu->op_addr);
+    uint8_t value = Read_Memory(cpu->mem, addr);
+    uint8_t result = cpu->AC - value;
+
+    // carry flag
+    if (cpu->AC >= value){
+        cpu->SR |= FLAG_CARRY;
+    } else{
+        cpu->SR &= ~FLAG_CARRY;
+    }
+
+    // zero flag
+    if (cpu->AC == value){
+        cpu->SR |= FLAG_ZERO;
+    } else{
+        cpu->SR &= ~FLAG_ZERO;
+    }
+
+
+    SET_NEGATIVE(cpu, result);
 }

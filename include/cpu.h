@@ -73,5 +73,10 @@ void Execute_EOR_IMM(CPU *cpu);
 void Execute_CPY_IMM(CPU *cpu);
 void Execute_BCC(CPU *cpu);
 void Execute_BMI(CPU *cpu);
+void Execute_BCS(CPU *cpu);
+void Execute_CPX_IMM(CPU *cpu);
+void Execute_TAY(CPU *cpu);
+void Execute_PHA(CPU *cpu);
+void Execute_CMP_ABS(CPU *cpu);
 
 #endif

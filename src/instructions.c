@@ -83,7 +83,7 @@ const struct cpu_ins instructions[256] = {
     {"EOR zp", 2, NULL, 3}, // 45
     {"LSR zp", 2, NULL, 5}, // 46
     {"Undefined", 0, NULL, 0}, // 47
-    {"PHA impl", 1, NULL, 3}, // 48
+    {"PHA impl", 1, Execute_PHA, 3}, // 48
     {"EOR #", 2, Execute_EOR_IMM, 2}, // 49
     {"LSR A", 1, NULL, 2}, // 4A
     {"Undefined", 0, NULL, 0}, // 4B
@@ -191,7 +191,7 @@ const struct cpu_ins instructions[256] = {
     {"LDA zp", 2, NULL, 3}, // A5
     {"LDX zp", 2, NULL, 3}, // A6
     {"Undefined", 0, NULL, 0}, // A7
-    {"TAY impl", 1, NULL, 2}, // A8
+    {"TAY impl", 1, Execute_TAY, 2}, // A8
     {"LDA #", 2, Execute_LDA_IMM, 2}, // A9
     {"TAX impl", 1, Execute_TAX, 2}, // AA
     {"Undefined", 0, NULL, 0}, // AB
@@ -201,7 +201,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // AF
 
     /* 0xB0 - 0xBF */
-    {"BCS rel", 2, NULL, 2}, // B0
+    {"BCS rel", 2, Execute_BCS, 2}, // B0
     {"LDA ind, Y", 2, NULL, 5}, // B1
     {"Undefined", 0, NULL, 0}, // B2
     {"Undefined", 0, NULL, 0}, // B3
@@ -232,7 +232,7 @@ const struct cpu_ins instructions[256] = {
     {"DEX impl", 1, Execute_DEX, 2}, // CA
     {"Undefined", 0, NULL, 0}, // CB
     {"CPY abs", 3, NULL, 4}, // CC
-    {"CMP abs", 3, NULL, 4}, // CD
+    {"CMP abs", 3, Execute_CMP_ABS, 4}, // CD
     {"DEC abs", 3, NULL, 6}, // CE
     {"Undefined", 0, NULL, 0}, // CF
 
@@ -255,7 +255,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // DF
 
     /* 0xE0 - 0xEF */
-    {"CPX #", 2, NULL, 2}, // E0
+    {"CPX #", 2, Execute_CPX_IMM, 2}, // E0
     {"SBC X, ind", 2, NULL, 6}, // E1
     {"Undefined", 0, NULL, 0}, // E2
     {"Undefined", 0, NULL, 0}, // E3
