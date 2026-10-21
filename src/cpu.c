@@ -80,8 +80,9 @@ static void STACK_PUSH(CPU *cpu, uint8_t byte){
 }
 
 static uint8_t STACK_POP(CPU *cpu){
-    uint8_t byte = Read_Memory(cpu->mem, 0x0100 | cpu->SP);
     cpu->SP++;
+    uint8_t byte = Read_Memory(cpu->mem, 0x0100 | cpu->SP);
+    
 
     return byte;
 }
@@ -446,3 +447,25 @@ void Execute_CMP_ABS(CPU *cpu){
 
     SET_NEGATIVE(cpu, result);
 }
+
+void Execute_TSX(CPU *cpu){
+    cpu->XR = cpu->SP;
+
+    SET_ZERO(cpu, cpu->XR);
+    SET_NEGATIVE(cpu, cpu->XR);
+}
+
+void Execute_TXA(CPU *cpu){
+    cpu->AC = cpu->XR;
+
+    SET_ZERO(cpu, cpu->AC);
+    SET_NEGATIVE(cpu, cpu->AC);
+}
+
+void Execute_PLA(CPU *cpu){
+    cpu->AC = STACK_POP(cpu);
+
+    SET_ZERO(cpu, cpu->AC);
+    SET_NEGATIVE(cpu, cpu->AC);
+}
+

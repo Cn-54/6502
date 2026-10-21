@@ -78,5 +78,9 @@ void Execute_CPX_IMM(CPU *cpu);
 void Execute_TAY(CPU *cpu);
 void Execute_PHA(CPU *cpu);
 void Execute_CMP_ABS(CPU *cpu);
+void Execute_TSX(CPU *cpu);
+void Execute_TXA(CPU *cpu);
+void Execute_PLA(CPU *cpu);
+
 
 #endif

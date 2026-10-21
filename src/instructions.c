@@ -119,7 +119,7 @@ const struct cpu_ins instructions[256] = {
     {"ADC zp", 2, NULL, 3}, // 65
     {"ROR zp", 2, NULL, 5}, // 66
     {"Undefined", 0, NULL, 0}, // 67
-    {"PLA impl", 1, NULL, 4}, // 68
+    {"PLA impl", 1, Execute_PLA, 4}, // 68
     {"ADC #", 2, Execute_ADC_IMM, 2}, // 69
     {"ROR A", 1, NULL, 2}, // 6A
     {"Undefined", 0, NULL, 0}, // 6B
@@ -157,7 +157,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // 87
     {"DEY impl", 1, Execute_DEY, 2}, // 88
     {"Undefined", 0, NULL, 0}, // 89
-    {"TXA impl", 1, NULL, 2}, // 8A
+    {"TXA impl", 1, Execute_TXA, 2}, // 8A
     {"Undefined", 0, NULL, 0}, // 8B
     {"STY abs", 3, NULL, 4}, // 8C
     {"STA abs", 3, Execute_STA_ABS, 4}, // 8D
@@ -211,7 +211,7 @@ const struct cpu_ins instructions[256] = {
     {"Undefined", 0, NULL, 0}, // B7
     {"CLV impl", 1, NULL, 2}, // B8
     {"LDA abs, Y", 3, NULL, 4}, // B9
-    {"TSX impl", 1, NULL, 2}, // BA
+    {"TSX impl", 1, Execute_TSX, 2}, // BA
     {"Undefined", 0, NULL, 0}, // BB
     {"LDY abs, X", 3, NULL, 4}, // BC
     {"LDA abs, X", 3, NULL, 4}, // BD
